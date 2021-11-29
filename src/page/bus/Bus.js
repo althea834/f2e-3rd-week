@@ -4,12 +4,10 @@ import { Link } from "react-router-dom";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import Keyboard from "../../component/keyboard/Keyboard";
+import ResultImg from '../../component/resultImg/ResultImg';
 
 import style from "./Bus.module.css";
 import { ReactComponent as Search } from "../../img/icon/search.svg";
-import { ReactComponent as TwoWayArrow } from "../../img/icon/twoWayArrow.svg";
-import Heart from "../../img/icon/heart.png";
-
 
 const Bus = (props) => {
     const [city, setCity] = useState('')
@@ -82,74 +80,7 @@ const Bus = (props) => {
             <div className={style.result}>
                 <div className={`mainColor ${style.caption}`}>搜尋結果</div>
                 <div className={`${style.searchResult}`}>
-                    <div className={`${style.scrollBar}`}>
-                        <ul className={`${style.list}`}>
-                            <li>
-                                <button className={`${style.leftSide}`}>
-                                    <h1>5220</h1>
-                                    <span>
-                                        基隆火車站(仁祥診所)
-                                        <TwoWayArrow />
-                                        瑞芳火車站(區民廣場)
-                                    </span>
-                                </button>
-                                <div className={`${style.rightSide}`}>
-                                    <button>
-                                        <img src={Heart} alt="加入我的收藏" />
-                                    </button>
-                                    新北
-                                </div>
-                            </li>
-                            <li>
-                                <button className={`${style.leftSide}`}>
-                                    <h1>5220</h1>
-                                    <span>
-                                        基隆火車站(仁祥診所)
-                                        <TwoWayArrow />
-                                        瑞芳火車站(區民廣場)
-                                    </span>
-                                </button>
-                                <div className={`${style.rightSide}`}>
-                                    <button>
-                                        <img src={Heart} alt="加入我的收藏" />
-                                    </button>
-                                    新北
-                                </div>
-                            </li>
-                            <li>
-                                <button className={`${style.leftSide}`}>
-                                    <h1>5220</h1>
-                                    <span>
-                                        基隆火車站(仁祥診所)
-                                        <TwoWayArrow />
-                                        瑞芳火車站(區民廣場)
-                                    </span>
-                                </button>
-                                <div className={`${style.rightSide}`}>
-                                    <button>
-                                        <img src={Heart} alt="加入我的收藏" />
-                                    </button>
-                                    新北
-                                </div>
-                            </li>
-                            <li>
-                                <button className={`${style.leftSide}`}>
-                                    <h1>5220</h1>
-                                    <span>
-                                        基隆火車站(仁祥診所)
-                                        <TwoWayArrow />
-                                        瑞芳火車站(區民廣場)
-                                    </span>
-                                </button>
-                                <div className={`${style.rightSide}`}>
-                                    <button>
-                                        <img src={Heart} alt="加入我的收藏" />
-                                    </button>
-                                    新北
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                    <ResultImg />
                 </div>
             </div>
             <Keyboard
