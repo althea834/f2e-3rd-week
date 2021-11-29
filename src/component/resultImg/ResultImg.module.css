@@ -1,0 +1,8 @@
+.image {
+    text-align: center;
+    line-height: 1.4375em;
+}
+
+.image > img {
+    margin-bottom: 14px;
+}
