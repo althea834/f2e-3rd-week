@@ -35,10 +35,13 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
+}
+
+.iconNav svg circle {
     fill: #5CBCDB;
 }
 
-.iconNav svg:hover {
+.iconNav svg:hover circle {
     fill: #399BBA;
 }
 
