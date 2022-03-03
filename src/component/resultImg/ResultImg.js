@@ -6,9 +6,9 @@ import NotFound from '../../img/notFound.png'
 
 
 const ResultImg = ({state}) => {
-    let text = !!state ? '很抱歉，找不到符合的路線' : '尋找您的公車路線';
+    let text = !!state ? '尋找您的公車路線' : '很抱歉，找不到符合的路線';
 
-    state = !!state ? NotFound :  Search; 
+    state = !!state ? Search : NotFound; 
 
     return <figure className={`${style.image}`}>
     <img  src={state} alt={text} />

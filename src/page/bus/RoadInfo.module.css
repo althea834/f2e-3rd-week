@@ -1,0 +1,15 @@
+.topRound {
+    border-radius: 20px 20px 0 0;
+}
+
+.container {
+    width: 886px;
+    margin: 0 auto;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 4.8vh 0;
+}

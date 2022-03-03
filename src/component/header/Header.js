@@ -1,14 +1,22 @@
 import React from 'react';
-import {Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import style from './Header.module.css'
+import { ReactComponent as Menu } from '../../img/icon/menu.svg'
+
 
 const Header = ({ className }) => {
     className = !!className ? className : '';
 
+    const mbNavHandler = () => {
+
+    }
+
     return <header className={`${style.header} ${className}`}>
         <h1><Link to="/">Hello,Bus!</Link></h1>
-        <nav className={style.nav}>
+        <button className={`pcHidden`} onClick={mbNavHandler}><Menu /></button>
+        <nav className={`mbHidden ${style.nav}`}>
+            <button className="closeBtn"></button>
             <Link to="/bus">公車動態</Link>
             <Link to="/nearby">附近站點</Link>
             <Link to="/schedule">班表查詢</Link>

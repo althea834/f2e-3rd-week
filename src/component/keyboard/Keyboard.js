@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import style from './Keyboard.module.css'
 import { ReactComponent as BackArrow } from '../../img/icon/backspace.svg';
 import { ReactComponent as CloseBtn } from '../../img/icon/cross.svg';
-import Modal from "../modal/Modal";
+import Modal from "../UI/modal/Modal";
 
 const Keyboard = ({ onClick, sliceEnd, cleanValue }) => {
     const [isOpen, setIsOpen] = useState(false);

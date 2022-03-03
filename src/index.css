@@ -77,9 +77,15 @@ input:focus {
   color: #fff;
 }
 
+.pcHidden {
+  display: none;
+}
 
 @media screen and (max-width: 720px) {
   .mbHidden {
     display: none !important;
+  }
+  .pcHidden {
+    display: block;
   }
 }
