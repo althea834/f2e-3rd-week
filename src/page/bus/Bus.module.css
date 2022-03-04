@@ -1,3 +1,12 @@
+.frameContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: center;
+  box-sizing: border-box;
+}
+
 .bottomRound {
   border-radius: 0 0 20px 20px;
 }
@@ -39,22 +48,10 @@
   border-radius: 12px;
 }
 .road button {
-  
   align-content: center;
   background-color: #e6e6e6;
   margin-right: 16px;
 }
-/* .road button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 5.5vh;
-  height: 5.5vh;
-  max-width: 50px;
-  max-height: 50px;
-  background-color: #e6e6e6;
-  border-radius: 12px;
-} */
 
 .road svg {
   width: 18px;
@@ -149,6 +146,8 @@ button.navSwitcherBtn {
 }
 
 @media screen and (max-width: 720px) {
+
+
   .header {
     flex-direction: row-reverse;
     padding: 0 4.8vw;
@@ -216,6 +215,7 @@ button.navSwitcherBtn {
 
   .searching {
     flex-direction: column;
+    justify-content: space-between;
     padding-bottom: 12px;
   }
   .searchBar span {
@@ -230,5 +230,15 @@ button.navSwitcherBtn {
   .searching > input {
     margin-bottom: 12px;
   }
-  
+  .content {
+    flex-direction: column;
+    padding: 0;
+  }
+  .result {
+    width: 100%;
+    box-shadow: none;
+  }
+  .searchResult{
+    padding: 0;
+  }
 }

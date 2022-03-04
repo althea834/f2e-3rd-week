@@ -139,18 +139,18 @@ const Bus = (props) => {
 
     }, [road, city, browserCity, fetchData])
 
-    useEffect(()=>{
+    useEffect(() => {
         const busLink = busLinkRef.current
         const nearbyLink = nearbyLinkRef.current
         const scheduleLink = scheduleLinkRef.current
         const collectionLink = collectionLinkRef.current
 
-        if( busLink.getAttribute('href') === pathName ) busLink.classList.add(style.activeLink)
-        if( nearbyLink.getAttribute('href') === pathName ) nearbyLink.classList.add(style.activeLink)
-        if( scheduleLink.getAttribute('href') === pathName ) scheduleLink.classList.add(style.activeLink)
-        if( collectionLink.getAttribute('href') === pathName ) collectionLink.classList.add(style.activeLink)
-        
-        return () =>{
+        if (busLink.getAttribute('href') === pathName) busLink.classList.add(style.activeLink)
+        if (nearbyLink.getAttribute('href') === pathName) nearbyLink.classList.add(style.activeLink)
+        if (scheduleLink.getAttribute('href') === pathName) scheduleLink.classList.add(style.activeLink)
+        if (collectionLink.getAttribute('href') === pathName) collectionLink.classList.add(style.activeLink)
+
+        return () => {
             busLink.classList.remove(style.activeLink)
             nearbyLink.classList.remove(style.activeLink)
             scheduleLink.classList.remove(style.activeLink)
@@ -158,51 +158,53 @@ const Bus = (props) => {
         }
     }, [pathName])
 
-    return <Fragment>
-        <header className={`mainColor ${style.header}`}>
-            <h1><Link to="/">Hello,Bus!</Link></h1>
-            <button className={`pcHidden ${style.navSwitcherBtn}`} onClick={mbNavHandler}>
-                {mbNavOpen ? <Cross /> : <Menu />}
-            </button>
-            <nav ref={navRef} className={`${style.nav}`}>
-                <Link ref={busLinkRef} to="/bus">公車動態</Link>
-                <Link ref={nearbyLinkRef} to="/nearby">附近站點</Link>
-                <Link ref={scheduleLinkRef} to="/schedule">班表查詢</Link>
-                <Link ref={collectionLinkRef} to="/collection">我的收藏</Link>
-            </nav>
-        </header>
-        <section className={`mainColor ${style.bottomRound}`}>
-            <Breadcrumbs />
-            <form className={`${style.container} ${style.searchBar}`}>
-                <span>*選擇縣市有助於您更快找到路線</span>
-                <div className={style.searching}>
-                    <input list="city" placeholder="請選擇縣市或手動輸入關鍵字" onChange={searchCityHandler} />
-                    <datalist id="city" >
-                        {cityValueTable.map((cityObj, idx) => <option key={idx} data-value={Object.keys(cityObj)[0]} value={Object.values(cityObj)[0]}></option>)}
-                    </datalist>
-                    <div className={style.road}>
-                        <input type="text" placeholder="請選擇路線或手動輸入關鍵字" value={road} onChange={searchRoadHandler} />
-                        <button type="submit"><Search /></button>
+    return <section className={style.frameContainer}>
+        <section>
+            <header className={`mainColor ${style.header}`}>
+                <h1><Link to="/">Hello,Bus!</Link></h1>
+                <button className={`pcHidden ${style.navSwitcherBtn}`} onClick={mbNavHandler}>
+                    {mbNavOpen ? <Cross /> : <Menu />}
+                </button>
+                <nav ref={navRef} className={`${style.nav}`}>
+                    <Link ref={busLinkRef} to="/bus">公車動態</Link>
+                    <Link ref={nearbyLinkRef} to="/nearby">附近站點</Link>
+                    <Link ref={scheduleLinkRef} to="/schedule">班表查詢</Link>
+                    <Link ref={collectionLinkRef} to="/collection">我的收藏</Link>
+                </nav>
+            </header>
+            <section className={`mainColor ${style.bottomRound}`}>
+                <Breadcrumbs />
+                <form className={`${style.container} ${style.searchBar}`}>
+                    <span>*選擇縣市有助於您更快找到路線</span>
+                    <div className={style.searching}>
+                        <input list="city" placeholder="請選擇縣市或手動輸入關鍵字" onChange={searchCityHandler} />
+                        <datalist id="city" >
+                            {cityValueTable.map((cityObj, idx) => <option key={idx} data-value={Object.keys(cityObj)[0]} value={Object.values(cityObj)[0]}></option>)}
+                        </datalist>
+                        <div className={style.road}>
+                            <input type="text" placeholder="請選擇路線或手動輸入關鍵字" value={road} onChange={searchRoadHandler} />
+                            <button type="submit"><Search /></button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </section>
         </section>
         <section className={`${style.container} ${style.content}`}>
-                <div className={style.result}>
-                    <div className={`mainColor ${style.caption}`}>搜尋結果</div>
-                    <div className={`${style.searchResult}`}>
-                        {!road && < ResultImg state={true} />}
-                        {road && roadList.length > 0 && <RoadList roadData={roadList} />}
-                        {road && !loading && roadList.length === 0 && <ResultImg />}
-                    </div>
+            <div className={style.result}>
+                <div className={`mainColor mbHidden ${style.caption} `}>搜尋結果</div>
+                <div className={`${style.searchResult}`}>
+                    {!road && < ResultImg state={true} />}
+                    {road && roadList.length > 0 && <RoadList roadData={roadList} />}
+                    {road && !loading && roadList.length === 0 && <ResultImg />}
                 </div>
-                <Keyboard
-                    onClick={getBtnValueHandler}
-                    sliceEnd={sliceRoadEndHandler}
-                    cleanValue={cleanHandler} />
-            </section>
-        <Footer />
-    </Fragment>
+            </div>
+            <Keyboard
+                onClick={getBtnValueHandler}
+                sliceEnd={sliceRoadEndHandler}
+                cleanValue={cleanHandler} />
+        </section>
+        <Footer className={`mbHidden`} />
+    </section>
 }
 
 export default Bus;

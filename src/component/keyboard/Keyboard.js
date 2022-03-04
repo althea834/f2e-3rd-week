@@ -16,8 +16,9 @@ const Keyboard = ({ onClick, sliceEnd, cleanValue }) => {
         setIsOpen(false)
     }
 
-    return <section>
-        <ul className={style.keyIn}>
+    return <section className={style.keyBoard}>
+        <div className={`pcHidden ${style.toggleBtn}`}></div>
+        <ul className={`${style.keyIn}`}>
             <li>
                 <button type="button" className={`whiteFont ${style.red}`} onClick={onClick} value="紅">紅</button>
                 <button type="button" className={`whiteFont ${style.blue}`} onClick={onClick} value="藍">藍</button>
@@ -49,9 +50,9 @@ const Keyboard = ({ onClick, sliceEnd, cleanValue }) => {
         </ul>
         <Modal isOpen={isOpen}>
             <section className={style.selection}>
-                <div className={style.caption}>
+                <div className={`mbHidden ${style.caption}`}>
                     <button type="button" onClick={closeModalHandler}><CloseBtn /></button>
-                    <h1>更多選項</h1>
+                    <h1 className="mbHidden">更多選項</h1>
                 </div>
                 <ul className={style.content}>
                     <li>
@@ -71,6 +72,9 @@ const Keyboard = ({ onClick, sliceEnd, cleanValue }) => {
                     </li>
                     <li>
                         <button type="button" onClick={onClick} value="其他">其他</button>
+                    </li>
+                    <li className="pcHidden">
+                        <button type="button" onClick={closeModalHandler} value="">取消</button>
                     </li>
                 </ul>
             </section>
