@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from 'react-router-dom'
 
 import Footer from "../../component/footer/Footer";
@@ -8,9 +8,8 @@ import RoadList from "../../component/roadList/RoadList";
 
 import style from "./Bus.module.css";
 import { ReactComponent as Search } from "../../img/icon/search.svg";
-import { ReactComponent as Menu } from "../../img/icon/menu.svg";
-import { ReactComponent as Cross } from "../../img/icon/cross.svg";
 import useFetch from "../../hook/useFetch";
+import Header from "../../component/header/Header";
 import Breadcrumbs from "../../component/UI/breadcrumbs/Breadcrumbs";
 
 const cityValueTable = [
@@ -39,19 +38,13 @@ const cityValueTable = [
 ]
 
 const Bus = (props) => {
-    const [mbNavOpen, setMbNavOpen] = useState(false);
     const [city, setCity] = useState('')
     const [road, setRoad] = useState('')
     const [roadList, setRoadList] = useState([])
     const [browserCity, setBrowserCity] = useState('')
     const { loading, fetchData } = useFetch()
-    const navRef = useRef();
     const location = useLocation();
     const pathName = location.pathname
-    const busLinkRef = useRef();
-    const nearbyLinkRef = useRef();
-    const scheduleLinkRef = useRef();
-    const collectionLinkRef = useRef();
 
     const searchCityHandler = (e) => {
         setCity(e.target.value)
@@ -71,12 +64,6 @@ const Bus = (props) => {
 
     const cleanHandler = () => {
         setRoad('');
-    }
-
-    const mbNavHandler = () => {
-        const nav = navRef.current;
-        nav.classList.toggle(style.openNav)
-        setMbNavOpen(state => !state)
     }
 
     // 初始位置
@@ -139,39 +126,8 @@ const Bus = (props) => {
 
     }, [road, city, browserCity, fetchData])
 
-    useEffect(() => {
-        const busLink = busLinkRef.current
-        const nearbyLink = nearbyLinkRef.current
-        const scheduleLink = scheduleLinkRef.current
-        const collectionLink = collectionLinkRef.current
-
-        if (busLink.getAttribute('href') === pathName) busLink.classList.add(style.activeLink)
-        if (nearbyLink.getAttribute('href') === pathName) nearbyLink.classList.add(style.activeLink)
-        if (scheduleLink.getAttribute('href') === pathName) scheduleLink.classList.add(style.activeLink)
-        if (collectionLink.getAttribute('href') === pathName) collectionLink.classList.add(style.activeLink)
-
-        return () => {
-            busLink.classList.remove(style.activeLink)
-            nearbyLink.classList.remove(style.activeLink)
-            scheduleLink.classList.remove(style.activeLink)
-            collectionLink.classList.remove(style.activeLink)
-        }
-    }, [pathName])
-
     return <section className={style.frameContainer}>
-        <section>
-            <header className={`mainColor ${style.header}`}>
-                <h1><Link to="/">Hello,Bus!</Link></h1>
-                <button className={`pcHidden ${style.navSwitcherBtn}`} onClick={mbNavHandler}>
-                    {mbNavOpen ? <Cross /> : <Menu />}
-                </button>
-                <nav ref={navRef} className={`${style.nav}`}>
-                    <Link ref={busLinkRef} to="/bus">公車動態</Link>
-                    <Link ref={nearbyLinkRef} to="/nearby">附近站點</Link>
-                    <Link ref={scheduleLinkRef} to="/schedule">班表查詢</Link>
-                    <Link ref={collectionLinkRef} to="/collection">我的收藏</Link>
-                </nav>
-            </header>
+        <Header className={`mainColor ${style.header}`} pathName={pathName} >
             <section className={`mainColor ${style.bottomRound}`}>
                 <Breadcrumbs />
                 <form className={`${style.container} ${style.searchBar}`}>
@@ -187,8 +143,8 @@ const Bus = (props) => {
                         </div>
                     </div>
                 </form>
-            </section>
-        </section>
+            </section>   
+        </Header>
         <section className={`${style.container} ${style.content}`}>
             <div className={style.result}>
                 <div className={`mainColor mbHidden ${style.caption} `}>搜尋結果</div>

@@ -69,6 +69,10 @@
   background-color: #fff;
 }
 
+.rightSide button:hover{
+  background-color: #fff;
+}
+
 .rightSide img {
   width: 100%;
   user-select: none;

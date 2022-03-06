@@ -73,8 +73,8 @@ const Keyboard = ({ onClick, sliceEnd, cleanValue }) => {
                     <li>
                         <button type="button" onClick={onClick} value="其他">其他</button>
                     </li>
-                    <li className="pcHidden">
-                        <button type="button" onClick={closeModalHandler} value="">取消</button>
+                    <li>
+                        <button type="button" onClick={closeModalHandler} value="" className="pcHidden">取消</button>
                     </li>
                 </ul>
             </section>

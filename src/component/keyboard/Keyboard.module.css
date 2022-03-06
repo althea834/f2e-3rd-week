@@ -24,7 +24,6 @@
   height: 50px;
   font-size: 1.25rem;
   border-radius: 10px;
-
   background-color: #e5e5e5;
   cursor: pointer;
 }
@@ -126,6 +125,7 @@ button.darkGrey:hover {
 .caption > button {
   padding: 3px 10px;
   text-align: center;
+  stroke: #4C546A;
 }
 
 .caption > button:hover {
