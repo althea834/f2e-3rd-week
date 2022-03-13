@@ -5,8 +5,10 @@ import {
 } from "react-router-dom";
 
 import Bus from './page/bus/Bus';
-import RoadInfo from './page/bus/RoadInfo';
 import Home from './page/home/Home';
+import Schedule from './page/schedule/Schedule';
+import RoadInfo from './page/bus/RoadInfo';
+
 
 
 const App = (props) => {
@@ -15,7 +17,7 @@ const App = (props) => {
     <Route path="/bus/:uid" component={RoadInfo}></Route>
     <Route path="/bus" component={Bus}></Route>
     <Route path="/nearby"></Route>
-    <Route path="/schedule"></Route>
+    <Route path="/schedule" component={Schedule}></Route>
     <Route path="/collection"></Route>
   </Switch>
 }

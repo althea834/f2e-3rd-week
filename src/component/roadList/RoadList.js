@@ -1,11 +1,10 @@
 import React from 'react'
-import { Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { ReactComponent as TwoWayArrow } from '../../img/icon/twoWayArrow.svg'
 import Heart from '../../img/icon/heart.png'
 
 import style from './RoadList.module.css';
-import RoadInfo from '../../page/bus/RoadInfo';
 
 const cityTable = {
     "TPE": "臺北市",
@@ -32,18 +31,44 @@ const cityTable = {
     "LIE": "連江縣"
 }
 
-const RoadList = (props) => {
-    const { roadData } = props;
+const NickNameTransCity = {
+    "TPE":"Taipei" ,
+    "NWT":"NewTaipei" ,
+    "TAO":"Taoyuan" ,
+    "TXG":"Taichung" ,
+    "TNN":"Tainan" ,
+    "KHH":"Kaohsiung" ,
+    "KEE":"Keelung" ,
+    "HSZ":"Hsinchu" ,
+    "HSQ":"HsinchuCounty" ,
+    "MIA":"MiaoliCounty" ,
+    "CHA":"ChanghuaCounty" ,
+    "NAN":"NantouCounty" ,
+    "YUN":"YunlinCounty" ,
+    "CYQ":"ChiayiCounty" ,
+    "CYI":"Chiayi" ,
+    "PIF":"PingtungCounty" ,
+    "ILA":"YilanCounty" ,
+    "HUA":"HualienCounty" ,
+    "TTT":"TaitungCounty" ,
+    "KIN":"KinmenCounty" ,
+    "PEN":"PenghuCounty" ,
+    "LIE":"LienchiangCounty"
+}
 
-    const List = roadData.map((data) => {
+const RoadList = (props) => {
+    const { roadList, onClick, link, linkParameter = "" } = props;
+
+    const List = roadList.map((data) => {
         const cityCode = data.RouteUID.slice(0, 3)
         const cityName = cityTable[cityCode];
+        const cityFetchValue = NickNameTransCity[cityCode]
 
-        return <Link
-            to={`/bus/${data.RouteUID}`}
-            key={data.RouteUID}>
-            <li>
-                <button className={`${style.leftSide}`}>
+        return <li key={data.RouteUID}>
+            <Link
+                to={`/${link}${(!!linkParameter ? '/': '')}${linkParameter}`}
+            >
+                <button className={`${style.leftSide}`} onClick={() => onClick(cityFetchValue)}>
                     <h1>{data.RouteName.Zh_tw}</h1>
                     <span>
                         {data.DepartureStopNameZh}
@@ -57,8 +82,9 @@ const RoadList = (props) => {
                     </button>
                     {cityName}
                 </div>
-            </li>
-        </Link>
+            </Link>
+        </li>
+
     })
 
     return (

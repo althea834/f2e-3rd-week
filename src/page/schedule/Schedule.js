@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
 
-import {CITY_VALUE_TABLE} from "../../util/constant";
+import { CITY_VALUE_TABLE } from "../../util/constant";
 import Footer from "../../component/footer/Footer";
 import Keyboard from "../../component/keyboard/Keyboard";
 import ResultImg from '../../component/resultImg/ResultImg';
 import RoadList from "../../component/roadList/RoadList";
 
-import style from "./Bus.module.css";
+import style from "./Schedule.module.css";
 import { ReactComponent as Search } from "../../img/icon/search.svg";
+import { ReactComponent as CloseBtn } from '../../img/icon/cross.svg';
 import useFetch from "../../hook/useFetch";
 import Header from "../../component/header/Header";
 import Breadcrumbs from "../../component/UI/breadcrumbs/Breadcrumbs";
+import Modal from "../../component/UI/modal/Modal";
 
-const Bus = (props) => {
-    const [city, setCity] = useState('')
-    const [road, setRoad] = useState('')
-    const [roadList, setRoadList] = useState([])
-    const [browserCity, setBrowserCity] = useState('')
-    const { loading, fetchData } = useFetch()
+const Schedule = (props) => {
+    const [city, setCity] = useState('');
+    const [road, setRoad] = useState('');
+    const [roadList, setRoadList] = useState([]);
+    const [browserCity, setBrowserCity] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
+    const [schedule, setSchedule] = useState([]);
+    const { loading, fetchData } = useFetch();
     const location = useLocation();
-    const pathName = location.pathname
+    const pathName = location.pathname;
 
     const searchCityHandler = (e) => {
         const cityValue = CITY_VALUE_TABLE.reduce((key, cityObj) => {
@@ -48,6 +52,15 @@ const Bus = (props) => {
         setRoad('');
     }
 
+    const closeModalHandler = () => {
+        setIsOpen(false)
+    }
+
+    const showScheduleHandler = (cityName) => {
+        setCity(cityName)
+        setIsOpen(true)
+    }
+
     // 初始位置
     useEffect(() => {
         navigator.geolocation.getCurrentPosition((data) => {
@@ -69,15 +82,14 @@ const Bus = (props) => {
             setRoadList([])
             return
         }
-
         let url = ''
-        
+
         if(!!city){
             url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${city}/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
         }else if(!!browserCity){
             url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${browserCity}/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
         }else{
-            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taipei/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=1`;
+            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taipei/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
         }
 
         const applyRoad = (data) => {
@@ -98,17 +110,31 @@ const Bus = (props) => {
         }
 
         fetchData(url, applyRoad)
-
-
+        
         return function resetRoadList() {
             setRoadList([])
         }
 
     }, [road, city, browserCity, fetchData])
 
+    // 取得班表
+    useEffect(() => {
+        if (!road) return
+        if (typeof city !== "string") return
+        if (!isOpen) return
+
+        fetchData(
+            `https://ptx.transportdata.tw/MOTC/v2/Bus/Schedule/City/${city}/${road}?%24select=RouteName%2CSubRouteName%2CDirection%2CTimetables&%24format=JSON`
+            , (data) => {
+                console.log(data)
+            }
+        )
+
+    }, [isOpen, city, road, fetchData])
+
     return <section className={style.frameContainer}>
-        <Header className={`mainColor ${style.header}`} pathName={pathName} >
-            <section className={`mainColor ${style.bottomRound}`}>
+        <Header className={`secondColor ${style.header}`} pathName={pathName} >
+            <section className={`secondColor ${style.bottomRound}`}>
                 <Breadcrumbs />
                 <form className={`${style.container} ${style.searchBar}`}>
                     <span>*選擇縣市有助於您更快找到路線</span>
@@ -123,19 +149,19 @@ const Bus = (props) => {
                         </div>
                     </div>
                 </form>
-            </section>   
+            </section>
         </Header>
         <section className={`${style.container} ${style.content}`}>
             <div className={style.result}>
-                <div className={`mainColor mbHidden ${style.caption} `}>搜尋結果</div>
+                <div className={`secondColor mbHidden ${style.caption} `}>搜尋結果</div>
                 <div className={`${style.searchResult}`}>
                     {!road && < ResultImg state={true} />}
-                    {road && roadList.length > 0 && 
-                    <RoadList 
-                        roadList={roadList} 
-                        link="bus"
-                        linkParameter="RouteUID"
-                    />}
+                    {road && roadList.length > 0 &&
+                        <RoadList
+                            roadList={roadList}
+                            onClick={showScheduleHandler}
+                            link="schedule"
+                        />}
                     {road && !loading && roadList.length === 0 && <ResultImg />}
                 </div>
             </div>
@@ -144,8 +170,17 @@ const Bus = (props) => {
                 sliceEnd={sliceRoadEndHandler}
                 cleanValue={cleanHandler} />
         </section>
-        <Footer className={`mbHidden`} />
+        <Modal isOpen={isOpen}>
+            <section className="sheet">
+                <div className={`mbHidden ${style.caption}`}>
+                    <button type="button" onClick={closeModalHandler}><CloseBtn /></button>
+                    <h1 className="roadName">{`${road}班次表`}</h1>
+                </div>
+                { }
+            </section>
+        </Modal>
+        <Footer className={`mbHidden secondColor`} />
     </section>
 }
 
-export default Bus;
+export default Schedule;

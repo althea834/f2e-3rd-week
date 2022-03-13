@@ -29,7 +29,8 @@ const useFetch = () => {
                 throw new Error(`Network got problem: ${res.status} ${res.statusText}`)
             }
             const data = await res.json()
-            setData(data);
+            setData(data)
+
         } catch (error) {
             console.log(error.message)
         }
