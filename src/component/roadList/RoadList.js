@@ -68,7 +68,7 @@ const RoadList = (props) => {
             <Link
                 to={`/${link}${(!!linkParameter ? '/': '')}${linkParameter}`}
             >
-                <button className={`${style.leftSide}`} onClick={() => onClick(cityFetchValue)}>
+                <button className={`${style.leftSide}`} onClick={() => onClick(cityFetchValue, data.RouteName.Zh_tw, data.RouteUID)}>
                     <h1>{data.RouteName.Zh_tw}</h1>
                     <span>
                         {data.DepartureStopNameZh}

@@ -9,21 +9,24 @@ import RoadList from "../../component/roadList/RoadList";
 
 import style from "./Schedule.module.css";
 import { ReactComponent as Search } from "../../img/icon/search.svg";
-import { ReactComponent as CloseBtn } from '../../img/icon/cross.svg';
 import useFetch from "../../hook/useFetch";
 import Header from "../../component/header/Header";
 import Breadcrumbs from "../../component/UI/breadcrumbs/Breadcrumbs";
+import Timetables from "./Timetables";
 import Modal from "../../component/UI/modal/Modal";
 
 const Schedule = (props) => {
-    const [city, setCity] = useState('');
-    const [road, setRoad] = useState('');
-    const [roadList, setRoadList] = useState([]);
-    const [browserCity, setBrowserCity] = useState('');
-    const [isOpen, setIsOpen] = useState(false);
-    const [schedule, setSchedule] = useState([]);
-    const { loading, fetchData } = useFetch();
-    const location = useLocation();
+    const [city, setCity] = useState('')
+    const [searchingRoad, setSearchingRoad] = useState('')
+    const [clickRoad, setClickRoad] = useState('')
+    const [roadList, setRoadList] = useState([])
+    const [roadUID, setRoadUID] = useState('')
+    const [browserCity, setBrowserCity] = useState('')
+    const [isOpen, setIsOpen] = useState(false)
+    const [schedule, setSchedule] = useState([])
+    const [alertOpen, setAlertOpen] = useState(false)
+    const { loading, fetchData } = useFetch()
+    const location = useLocation()
     const pathName = location.pathname;
 
     const searchCityHandler = (e) => {
@@ -37,28 +40,34 @@ const Schedule = (props) => {
     }
 
     const searchRoadHandler = (e) => {
-        setRoad(e.target.value)
+        setSearchingRoad(e.target.value)
     }
 
     const sliceRoadEndHandler = () => {
-        setRoad(state => state.slice(0, -1))
+        setSearchingRoad(state => state.slice(0, -1))
     }
 
     const getBtnValueHandler = (e) => {
-        setRoad(state => state + e.target.value)
+        setSearchingRoad(state => state + e.target.value)
     }
 
     const cleanHandler = () => {
-        setRoad('');
+        setSearchingRoad('');
     }
 
     const closeModalHandler = () => {
         setIsOpen(false)
     }
 
-    const showScheduleHandler = (cityName) => {
+    const showScheduleHandler = (cityName, roadName, roadUID) => {
         setCity(cityName)
+        setClickRoad(roadName)
+        setRoadUID(roadUID)
         setIsOpen(true)
+    }
+
+    const alertHandler = () =>{
+        setAlertOpen(alertOpen => !alertOpen)
     }
 
     // 初始位置
@@ -78,30 +87,30 @@ const Schedule = (props) => {
 
     // 搜尋路線
     useEffect(() => {
-        if (!road) {
+        if (!searchingRoad) {
             setRoadList([])
             return
         }
         let url = ''
 
-        if(!!city){
-            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${city}/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
-        }else if(!!browserCity){
-            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${browserCity}/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
-        }else{
-            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taipei/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
+        if (!!city) {
+            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${city}/${searchingRoad}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
+        } else if (!!browserCity) {
+            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${browserCity}/${searchingRoad}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
+        } else {
+            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taipei/${searchingRoad}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
         }
 
         const applyRoad = (data) => {
-            if (data.length === 0){
+            if (data.length === 0) {
                 setRoadList([])
             }
 
-            setRoadList(roadList=> {
+            setRoadList(roadList => {
                 const sameRoad = roadList.filter(road => {
-                    return data.some(route => route.RouteUID === road.RouteUID) 
+                    return data.some(route => route.RouteUID === road.RouteUID)
                 })
-    
+
                 const newRoad = data.filter(route => {
                     return roadList.every(road => road.RouteUID !== route.RouteUID)
                 })
@@ -110,27 +119,68 @@ const Schedule = (props) => {
         }
 
         fetchData(url, applyRoad)
-        
+
         return function resetRoadList() {
             setRoadList([])
         }
 
-    }, [road, city, browserCity, fetchData])
+    }, [searchingRoad, city, browserCity, fetchData])
 
     // 取得班表
     useEffect(() => {
-        if (!road) return
-        if (typeof city !== "string") return
-        if (!isOpen) return
+        if (!clickRoad || !city || !roadUID) {
+            return
+        }
 
-        fetchData(
-            `https://ptx.transportdata.tw/MOTC/v2/Bus/Schedule/City/${city}/${road}?%24select=RouteName%2CSubRouteName%2CDirection%2CTimetables&%24format=JSON`
-            , (data) => {
-                console.log(data)
+        // 目前僅提供桃園市資料查詢
+        if( city !== 'Taoyuan'){
+            setIsOpen(false)
+            setAlertOpen(true)
+            return 
+        }
+
+        let url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Schedule/City/${city}/${clickRoad}?%24select=Direction%2CTimetables&%24filter=RouteUID%20eq%20'${roadUID}'&%24format=JSON`
+
+        const applySchedule = (data) => {
+            const sheet = []
+
+            for (let i = 0; i < data.length; i++) {
+                const { Direction, Timetables } = data[i]
+
+                for (let j = 0; j < Timetables.length; j++) {
+                    let [sheetLength, TimeLocation] = Timetables[j].TripID.split('-')
+                    sheetLength = parseInt(sheetLength, 10)
+                    TimeLocation =parseInt(TimeLocation, 10)
+
+                    if (sheet[sheetLength - 1] === undefined) {
+                        sheet[sheetLength - 1] = {
+                            ServiceDay: [],
+                            Direction: [],
+                            Time: []
+                        }
+                    }
+
+                    if (sheet[sheetLength - 1].ServiceDay.length === 0) {
+                        sheet[sheetLength - 1].ServiceDay = { ...Timetables[j].ServiceDay }
+                    }
+
+                    if (sheet[sheetLength - 1].Direction[Direction] === undefined) {
+                        sheet[sheetLength - 1].Direction[Direction] = Timetables[j].StopTimes[0].StopName.Zh_tw
+                    }
+
+                    if (typeof sheet[sheetLength - 1].Time[TimeLocation - 1] !== "object") {
+                        sheet[sheetLength - 1].Time[TimeLocation - 1] = []
+                    }
+
+                    sheet[sheetLength - 1].Time[TimeLocation - 1][Direction] = Timetables[j].StopTimes[0].DepartureTime
+                    setSchedule(sheet)
+                }
             }
-        )
+        }
 
-    }, [isOpen, city, road, fetchData])
+        fetchData(url, applySchedule)
+
+    }, [city, clickRoad, roadUID, fetchData])
 
     return <section className={style.frameContainer}>
         <Header className={`secondColor ${style.header}`} pathName={pathName} >
@@ -144,7 +194,7 @@ const Schedule = (props) => {
                             {CITY_VALUE_TABLE.map((cityObj, idx) => <option key={idx} data-value={Object.keys(cityObj)[0]} value={Object.values(cityObj)[0]}></option>)}
                         </datalist>
                         <div className={style.road}>
-                            <input type="text" placeholder="請選擇路線或手動輸入關鍵字" value={road} onChange={searchRoadHandler} />
+                            <input type="text" placeholder="請選擇路線或手動輸入關鍵字" value={searchingRoad} onChange={searchRoadHandler} />
                             <button type="submit"><Search /></button>
                         </div>
                     </div>
@@ -155,14 +205,14 @@ const Schedule = (props) => {
             <div className={style.result}>
                 <div className={`secondColor mbHidden ${style.caption} `}>搜尋結果</div>
                 <div className={`${style.searchResult}`}>
-                    {!road && < ResultImg state={true} />}
-                    {road && roadList.length > 0 &&
+                    {!searchingRoad && < ResultImg state={true} />}
+                    {searchingRoad && roadList.length > 0 &&
                         <RoadList
                             roadList={roadList}
                             onClick={showScheduleHandler}
                             link="schedule"
                         />}
-                    {road && !loading && roadList.length === 0 && <ResultImg />}
+                    {searchingRoad && !loading && roadList.length === 0 && <ResultImg />}
                 </div>
             </div>
             <Keyboard
@@ -170,15 +220,15 @@ const Schedule = (props) => {
                 sliceEnd={sliceRoadEndHandler}
                 cleanValue={cleanHandler} />
         </section>
-        <Modal isOpen={isOpen}>
-            <section className="sheet">
-                <div className={`mbHidden ${style.caption}`}>
-                    <button type="button" onClick={closeModalHandler}><CloseBtn /></button>
-                    <h1 className="roadName">{`${road}班次表`}</h1>
-                </div>
-                { }
-            </section>
-        </Modal>
+        <Timetables 
+            isOpen={isOpen} 
+            road={clickRoad} 
+            schedule={schedule} 
+            closeModalHandler={closeModalHandler}
+        ></Timetables>
+        <Modal isOpen={alertOpen} onClick={alertHandler}>
+                <section className={style.alert}>很抱歉，目前僅提供桃園市資料查詢</section>
+            </Modal>
         <Footer className={`mbHidden secondColor`} />
     </section>
 }

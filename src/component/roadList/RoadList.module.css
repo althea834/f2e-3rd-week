@@ -80,10 +80,6 @@
   user-select: none;
 }
 @media screen and (max-width: 720px) {
-  .scrollBar {
-    max-height: 40vh;
-  }
-
   .scrollBar::-webkit-scrollbar-thumb {
     background-color: transparent;
   }

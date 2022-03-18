@@ -48,7 +48,7 @@ const Keyboard = ({ onClick, sliceEnd, cleanValue }) => {
                 <button type="button" onClick={sliceEnd}><BackArrow /></button>
             </li>
         </ul>
-        <Modal isOpen={isOpen}>
+        <Modal isOpen={isOpen} onClick={closeModalHandler}>
             <section className={style.selection}>
                 <div className={`mbHidden ${style.caption}`}>
                     <button type="button" onClick={closeModalHandler}><CloseBtn /></button>
