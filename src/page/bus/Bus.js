@@ -15,10 +15,12 @@ import Breadcrumbs from "../../component/UI/breadcrumbs/Breadcrumbs";
 
 const Bus = (props) => {
     const [city, setCity] = useState('')
-    const [road, setRoad] = useState('')
+    const [searchingRoad,setSearchingRoad] =useState('')
+    const [clickRoad, setClickRoad] = useState('')
+    const [roadUID, setRoadUID] = useState('')
     const [roadList, setRoadList] = useState([])
     const [browserCity, setBrowserCity] = useState('')
-    const { loading, fetchData } = useFetch()
+    const [ loading, fetchData ] = useFetch()
     const location = useLocation();
     const pathName = location.pathname
 
@@ -33,19 +35,19 @@ const Bus = (props) => {
     }
 
     const searchRoadHandler = (e) => {
-        setRoad(e.target.value)
+        setSearchingRoad(e.target.value)
     }
 
     const sliceRoadEndHandler = () => {
-        setRoad(state => state.slice(0, -1))
+        setSearchingRoad(state => state.slice(0, -1))
     }
 
     const getBtnValueHandler = (e) => {
-        setRoad(state => state + e.target.value)
+        setSearchingRoad(state => state + e.target.value)
     }
 
     const cleanHandler = () => {
-        setRoad('');
+        setSearchingRoad('');
     }
 
     // 初始位置
@@ -65,7 +67,7 @@ const Bus = (props) => {
 
     // 搜尋路線
     useEffect(() => {
-        if (!road) {
+        if (!searchingRoad) {
             setRoadList([])
             return
         }
@@ -73,11 +75,11 @@ const Bus = (props) => {
         let url = ''
         
         if(!!city){
-            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${city}/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
+            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${city}/${searchingRoad}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
         }else if(!!browserCity){
-            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${browserCity}/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
+            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${browserCity}/${searchingRoad}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
         }else{
-            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taipei/${road}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=1`;
+            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taoyuan/${searchingRoad}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
         }
 
         const applyRoad = (data) => {
@@ -104,7 +106,7 @@ const Bus = (props) => {
             setRoadList([])
         }
 
-    }, [road, city, browserCity, fetchData])
+    }, [searchingRoad, city, browserCity, fetchData])
 
     return <section className={style.frameContainer}>
         <Header className={`mainColor ${style.header}`} pathName={pathName} >
@@ -118,7 +120,7 @@ const Bus = (props) => {
                             {CITY_VALUE_TABLE.map((cityObj, idx) => <option key={idx} data-value={Object.keys(cityObj)[0]} value={Object.values(cityObj)[0]}></option>)}
                         </datalist>
                         <div className={style.road}>
-                            <input type="text" placeholder="請選擇路線或手動輸入關鍵字" value={road} onChange={searchRoadHandler} />
+                            <input type="text" placeholder="請選擇路線或手動輸入關鍵字" value={searchingRoad} onChange={searchRoadHandler} />
                             <button type="submit"><Search /></button>
                         </div>
                     </div>
@@ -129,14 +131,14 @@ const Bus = (props) => {
             <div className={style.result}>
                 <div className={`mainColor mbHidden ${style.caption} `}>搜尋結果</div>
                 <div className={`${style.searchResult}`}>
-                    {!road && < ResultImg state={true} />}
-                    {road && roadList.length > 0 && 
+                    {!searchingRoad && < ResultImg state={true} />}
+                    {searchingRoad && roadList.length > 0 && 
                     <RoadList 
                         roadList={roadList} 
                         link="bus"
                         linkParameter="RouteUID"
                     />}
-                    {road && !loading && roadList.length === 0 && <ResultImg />}
+                    {searchingRoad && !loading && roadList.length === 0 && <ResultImg />}
                 </div>
             </div>
             <Keyboard

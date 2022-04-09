@@ -10,6 +10,7 @@
 }
 
 .keyIn li {
+  display: flex;
   margin-bottom: 1vh;
 }
 
@@ -18,9 +19,10 @@
 }
 
 .keyIn button {
+  width: 70px;
+  flex: 1 1 70px;
   margin-right: 9px;
   padding: 0;
-  width: 70px;
   height: 50px;
   font-size: 1.25rem;
   border-radius: 10px;
@@ -176,7 +178,6 @@ button.darkGrey:hover {
     border-radius: 20px 20px 0px 0px;
   }
   .keyIn button {
-    width: 60px;
     height: 43px;
   }
   .selection {

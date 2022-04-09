@@ -57,16 +57,24 @@ const NickNameTransCity = {
 }
 
 const RoadList = (props) => {
-    const { roadList, onClick, link, linkParameter = "" } = props;
+    const { roadList, onClick=()=>{}, link} = props;
 
     const List = roadList.map((data) => {
-        const cityCode = data.RouteUID.slice(0, 3)
+        const cityCode = data.RouteUID.slice(0, 3);
         const cityName = cityTable[cityCode];
-        const cityFetchValue = NickNameTransCity[cityCode]
+        const cityFetchValue = NickNameTransCity[cityCode];
+        const linkParams = link === 'bus' ? `/${link}/${cityFetchValue}/${data.RouteUID}`:`/${link}`;
 
         return <li key={data.RouteUID}>
             <Link
-                to={`/${link}${(!!linkParameter ? '/': '')}${linkParameter}`}
+                to={{
+                    pathname:linkParams,
+                    state:{
+                        road:data.RouteName.Zh_tw,
+                        start:data.DepartureStopNameZh,
+                        end:data.DestinationStopNameZh
+                    }
+                }}
             >
                 <button className={`${style.leftSide}`} onClick={() => onClick(cityFetchValue, data.RouteName.Zh_tw, data.RouteUID)}>
                     <h1>{data.RouteName.Zh_tw}</h1>

@@ -37,10 +37,10 @@ const useFetch = () => {
         setLoading(false)
     }, [])
 
-    return {
+    return [
         loading,
         fetchData
-    }
+    ]
 }
 
 export default useFetch

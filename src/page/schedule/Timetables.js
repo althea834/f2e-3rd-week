@@ -23,8 +23,6 @@ const dayType = [{
     'day': ['一', '二', '三', '四', '五']
 }]
 
-// TO DO: Direction為0，但有假日與平日差異，會多出不存在的undefined
-// overflow拉桿位置要調整
 const Table = ({ isOpen, road, schedule, closeModalHandler }) => {
     const Sheets = schedule.map((sheet) => {
         const serviceDay = []

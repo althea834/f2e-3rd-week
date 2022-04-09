@@ -78,7 +78,7 @@ input:focus {
 }
 
 .pcHidden {
-  display: none !important;
+  display: none;
 }
 
 @media screen and (max-width: 720px) {

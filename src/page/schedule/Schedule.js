@@ -25,7 +25,7 @@ const Schedule = (props) => {
     const [isOpen, setIsOpen] = useState(false)
     const [schedule, setSchedule] = useState([])
     const [alertOpen, setAlertOpen] = useState(false)
-    const { loading, fetchData } = useFetch()
+    const [loading, fetchData] = useFetch()
     const location = useLocation()
     const pathName = location.pathname;
 
@@ -66,7 +66,7 @@ const Schedule = (props) => {
         setIsOpen(true)
     }
 
-    const alertHandler = () =>{
+    const alertHandler = () => {
         setAlertOpen(alertOpen => !alertOpen)
     }
 
@@ -98,7 +98,7 @@ const Schedule = (props) => {
         } else if (!!browserCity) {
             url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/${browserCity}/${searchingRoad}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
         } else {
-            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taipei/${searchingRoad}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
+            url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taoyuan/${searchingRoad}?$select=RouteUID%2CRouteName%2CDepartureStopNameZh%2C%20DestinationStopNameZh&$top=30`;
         }
 
         const applyRoad = (data) => {
@@ -128,15 +128,15 @@ const Schedule = (props) => {
 
     // 取得班表
     useEffect(() => {
-        if (!clickRoad || !city || !roadUID) {
+        if (!clickRoad || !roadUID) {
             return
         }
 
         // 目前僅提供桃園市資料查詢
-        if( city !== 'Taoyuan'){
+        if (city !== 'Taoyuan') {
             setIsOpen(false)
             setAlertOpen(true)
-            return 
+            return
         }
 
         let url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Schedule/City/${city}/${clickRoad}?%24select=Direction%2CTimetables&%24filter=RouteUID%20eq%20'${roadUID}'&%24format=JSON`
@@ -150,7 +150,7 @@ const Schedule = (props) => {
                 for (let j = 0; j < Timetables.length; j++) {
                     let [sheetLength, TimeLocation] = Timetables[j].TripID.split('-')
                     sheetLength = parseInt(sheetLength, 10)
-                    TimeLocation =parseInt(TimeLocation, 10)
+                    TimeLocation = parseInt(TimeLocation, 10)
 
                     if (sheet[sheetLength - 1] === undefined) {
                         sheet[sheetLength - 1] = {
@@ -220,15 +220,15 @@ const Schedule = (props) => {
                 sliceEnd={sliceRoadEndHandler}
                 cleanValue={cleanHandler} />
         </section>
-        <Timetables 
-            isOpen={isOpen} 
-            road={clickRoad} 
-            schedule={schedule} 
+        <Timetables
+            isOpen={isOpen}
+            road={clickRoad}
+            schedule={schedule}
             closeModalHandler={closeModalHandler}
         ></Timetables>
         <Modal isOpen={alertOpen} onClick={alertHandler}>
-                <section className={style.alert}>很抱歉，目前僅提供桃園市資料查詢</section>
-            </Modal>
+            <section className={style.alert}>很抱歉，目前僅提供桃園市資料查詢</section>
+        </Modal>
         <Footer className={`mbHidden secondColor`} />
     </section>
 }
