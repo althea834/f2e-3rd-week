@@ -57,7 +57,7 @@ const NickNameTransCity = {
 }
 
 const RoadList = (props) => {
-    const { roadList, onClick=()=>{}, link} = props;
+    const { roadList, onClick=()=>{}, link, searchRoad=""} = props;
 
     const List = roadList.map((data) => {
         const cityCode = data.RouteUID.slice(0, 3);
@@ -72,7 +72,9 @@ const RoadList = (props) => {
                     state:{
                         road:data.RouteName.Zh_tw,
                         start:data.DepartureStopNameZh,
-                        end:data.DestinationStopNameZh
+                        end:data.DestinationStopNameZh,
+                        city:cityFetchValue,
+                        searchRoad:searchRoad
                     }
                 }}
             >

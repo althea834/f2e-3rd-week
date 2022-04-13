@@ -260,6 +260,11 @@
     padding-left: 15px;
   }
 
+  .mbRoadInfoTitle button {
+    background-color: transparent;
+    cursor: pointer;
+  }
+
   .mbRoadInfoTitle svg path {
     fill: #fff;
   }

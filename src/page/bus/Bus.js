@@ -16,8 +16,6 @@ import Breadcrumbs from "../../component/UI/breadcrumbs/Breadcrumbs";
 const Bus = (props) => {
     const [city, setCity] = useState('')
     const [searchingRoad,setSearchingRoad] =useState('')
-    const [clickRoad, setClickRoad] = useState('')
-    const [roadUID, setRoadUID] = useState('')
     const [roadList, setRoadList] = useState([])
     const [browserCity, setBrowserCity] = useState('')
     const [ loading, fetchData ] = useFetch()
@@ -137,6 +135,7 @@ const Bus = (props) => {
                         roadList={roadList} 
                         link="bus"
                         linkParameter="RouteUID"
+                        searchRoad={searchingRoad}
                     />}
                     {searchingRoad && !loading && roadList.length === 0 && <ResultImg />}
                 </div>

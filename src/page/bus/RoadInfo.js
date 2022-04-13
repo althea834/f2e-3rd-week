@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
 
 import Header from '../../component/header/Header';
 import Breadcrumbs from '../../component/UI/breadcrumbs/Breadcrumbs';
@@ -17,6 +17,7 @@ import Switch from '../../component/UI/switch/Switch';
 import style from './RoadInfo.module.css';
 
 const RoadInfo = (props) => {
+    const history = useHistory()
     const location = useLocation()
     const { city, uid } = useParams();
     const [routeDirection, setRouteDirection] = useState(0)
@@ -28,6 +29,10 @@ const RoadInfo = (props) => {
     const [loading, fetchData] = useFetch(false)
 
     let stopList = []
+
+    const backPreviousPageHandler = () =>{
+        history.replace('/bus')
+    }
 
     const stopDirectionHandler = () => {
         setRouteDirection(state => state === 0 ? 1 : 0)
@@ -48,7 +53,7 @@ const RoadInfo = (props) => {
     }
 
     const alertHandler = () => {
-        setAlertOpen(true)
+        setAlertOpen(alertOpen => !alertOpen)
     }
 
     // get bus stop/ bus location/ stop time
@@ -189,7 +194,7 @@ const RoadInfo = (props) => {
             <section className={`mainColor ${style.topRound}`}>
                 <Breadcrumbs className="mbHidden" />
                 <section className={`pcHidden lightColor ${style.mbRoadInfoTitle}`}>
-                    <BackArrow />
+                    <button onClick={backPreviousPageHandler}><BackArrow /></button>
                 </section>
                 <section className={`mainColor ${style.container} ${style.roadHeader}`}>
                     <div className={style.tool}>
@@ -237,14 +242,7 @@ const RoadInfo = (props) => {
                         </button>
                     </div>
                     <ul className={style.LSContent}>
-                        {/* <li className={`${style.stopInfo} ${style.passed}`}>
-                            <div className={style.stopTime}>12:00</div>
-                            <div className={style.stopName}>桃客總站</div>
-                            <div className={style.busID}>
-                                EAA-511
-                            </div>
-                        </li> */}
-                        {stopList}
+                        {!loading&&stopList}
                     </ul>
                 </section>
                 <section className={style.rightContent}>
