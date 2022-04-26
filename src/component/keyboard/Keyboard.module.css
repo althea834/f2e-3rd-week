@@ -176,6 +176,7 @@ button.darkGrey:hover {
     width: 100vw;
     padding: 25px 16px 16px;
     border-radius: 20px 20px 0px 0px;
+    transition: all 0.3s;
   }
   .keyIn button {
     height: 43px;
@@ -204,10 +205,14 @@ button.darkGrey:hover {
     box-sizing: content-box;
     transition: all 0.3s;
   }
-  .close .toggleBtn {
+  .keyBoard.closed{
+    padding: 0 16px 13px;
+  }
+  .closed .toggleBtn {
     transform: rotate(180deg);
   }
-  .close .keyIn{
-    height: 0;
+  .closed .keyIn{
+    display: none;
+    visibility: hidden;
   }
 }

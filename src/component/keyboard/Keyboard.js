@@ -7,6 +7,11 @@ import Modal from "../UI/modal/Modal";
 
 const Keyboard = ({ onClick, sliceEnd, cleanValue }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [openKeyBoard, setOpenKeyBoard] = useState(true)
+
+    const keyBoardHandler = () => {
+        setOpenKeyBoard(state => !state)
+    }
 
     const openModalHandler = () => {
         setIsOpen(true)
@@ -16,8 +21,10 @@ const Keyboard = ({ onClick, sliceEnd, cleanValue }) => {
         setIsOpen(false)
     }
 
-    return <section className={style.keyBoard}>
-        <div className={`pcHidden ${style.toggleBtn}`}></div>
+    const ifOpenStyle = !openKeyBoard ? `${style.closed}` : '';
+
+    return <section className={`${style.keyBoard} ${ifOpenStyle}`}>
+        <div className={`pcHidden ${style.toggleBtn}`} onClick={keyBoardHandler}></div>
         <ul className={`${style.keyIn}`}>
             <li>
                 <button type="button" className={`whiteFont ${style.red}`} onClick={onClick} value="紅">紅</button>

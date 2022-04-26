@@ -1,3 +1,10 @@
+.frameContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+}
+
 .banner {
     height: 78vh;
     background: #fff url('../../img/bc.png') center bottom/cover no-repeat;

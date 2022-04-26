@@ -12,7 +12,7 @@ import { ReactComponent as CollectionIcon } from '../../img/icon/collection.svg'
 
 
 const Home = (props) => {
-  return <React.Fragment>
+  return <section className={`${style.frameContainer}`}>
     <section className={style.banner}>
       <Header className={`mbHidden whiteFont`} />
       <section className={style.bannerText}>
@@ -36,7 +36,7 @@ const Home = (props) => {
         我的收藏</Link>
     </section>
     <Footer />
-  </React.Fragment>
+  </section>
 }
 
 export default Home;
