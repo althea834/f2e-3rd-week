@@ -249,6 +249,29 @@
   border-radius: 20px;
 }
 
+@media screen and (max-width: 320px){
+  .tool {
+    padding-bottom: 16px;
+  }
+
+  .toolIcon svg{
+    width: 30px;
+    height: 30px;
+  }
+  
+  .roadTitle h2{
+    margin: 4vh 0 6vh;
+  }
+
+  .roadTitle h3{
+    font-size: 1rem;
+  }
+
+  .leftContent {
+    flex: 0 1;
+  }
+}
+
 @media screen and (max-width:720px) {
   .header svg line{
     stroke:#4c546a;

@@ -57,7 +57,9 @@ const NickNameTransCity = {
 }
 
 const RoadList = (props) => {
-    const { roadList, onClick=()=>{}, link, searchRoad=""} = props;
+    const { roadList, link, getLonger=false, searchRoad="", onClick=()=>{}} = props;
+
+    const longer = getLonger ? style.longer : '';
 
     const List = roadList.map((data) => {
         const cityCode = data.RouteUID.slice(0, 3);
@@ -98,7 +100,7 @@ const RoadList = (props) => {
     })
 
     return (
-        <div className={`${style.scrollBar}`}>
+        <div className={`${style.scrollBar} ${longer}`}>
             <ul className={`${style.list}`}>
                 {List}
             </ul>

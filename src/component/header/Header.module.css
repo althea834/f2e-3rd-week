@@ -49,6 +49,7 @@ button.navSwitcherBtn {
 
 @media screen and (max-width: 720px) {
   .header {
+    position: relative;
     flex-direction: row-reverse;
     padding: 0 4.8vw;
     height: 60px;
@@ -63,16 +64,22 @@ button.navSwitcherBtn {
     font-weight: normal;
   }
 
+  .navSwitcherBtn{
+    position: absolute;
+    z-index: 2;
+    left: 4.8vw;
+  }
+
   .nav {
     box-sizing: border-box;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    height: 93vh;
+    height: 100vh;
     width: 0;
     position: fixed;
     z-index: 1;
-    top: 7vh;
+    top: 0;
     left: 0;
     padding-top: 110px;
     background-color: #5a637e;
@@ -86,7 +93,7 @@ button.navSwitcherBtn {
     margin-right: 0;
     margin-bottom: 30px;
     height: 5vh;
-    line-height: 1;
+    line-height: 0.7;
     opacity: 0;
     transition: all 0.3s;
   }

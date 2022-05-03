@@ -25,6 +25,7 @@ const Schedule = (props) => {
     const [isOpen, setIsOpen] = useState(false)
     const [schedule, setSchedule] = useState([])
     const [alertOpen, setAlertOpen] = useState(false)
+    const [mbListLonger, setMbListLonger] = useState(false)
     const [loading, fetchData] = useFetch()
     const location = useLocation()
     const pathName = location.pathname;
@@ -68,6 +69,10 @@ const Schedule = (props) => {
 
     const alertHandler = () => {
         setAlertOpen(alertOpen => !alertOpen)
+    }
+
+    const getListLonger = () => {
+        setMbListLonger(state => !state)
     }
 
     // 初始位置
@@ -205,18 +210,20 @@ const Schedule = (props) => {
             <div className={style.result}>
                 <div className={`secondColor mbHidden ${style.caption} `}>搜尋結果</div>
                 <div className={`${style.searchResult}`}>
-                    {!searchingRoad && < ResultImg state={true} />}
+                    {!searchingRoad && < ResultImg state={true} text={'尋找您的公車路線'}/>}
                     {searchingRoad && roadList.length > 0 &&
                         <RoadList
                             roadList={roadList}
+                            getLonger={mbListLonger}
                             onClick={showScheduleHandler}
                             link="schedule"
                         />}
-                    {searchingRoad && !loading && roadList.length === 0 && <ResultImg />}
+                    {searchingRoad && !loading && roadList.length === 0 && <ResultImg text={'很抱歉，找不到符合的路線'}/>}
                 </div>
             </div>
             <Keyboard
                 onClick={getBtnValueHandler}
+                getSmaller={getListLonger}
                 sliceEnd={sliceRoadEndHandler}
                 cleanValue={cleanHandler} />
         </section>

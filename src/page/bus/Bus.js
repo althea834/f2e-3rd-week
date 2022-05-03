@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from 'react-router-dom'
 
 import {CITY_VALUE_TABLE} from "../../util/constant";
@@ -18,6 +18,7 @@ const Bus = (props) => {
     const [searchingRoad,setSearchingRoad] =useState('')
     const [roadList, setRoadList] = useState([])
     const [browserCity, setBrowserCity] = useState('')
+    const [mbListLonger, setMbListLonger] = useState(false)
     const [ loading, fetchData ] = useFetch()
     const location = useLocation();
     const pathName = location.pathname
@@ -46,6 +47,10 @@ const Bus = (props) => {
 
     const cleanHandler = () => {
         setSearchingRoad('');
+    }
+
+    const getListLonger = () =>{
+        setMbListLonger(state => !state)
     }
 
     // 初始位置
@@ -129,19 +134,21 @@ const Bus = (props) => {
             <div className={style.result}>
                 <div className={`mainColor mbHidden ${style.caption} `}>搜尋結果</div>
                 <div className={`${style.searchResult}`}>
-                    {!searchingRoad && < ResultImg state={true} />}
+                    {!searchingRoad && < ResultImg state={true} text={'尋找您的公車路線'}/>}
                     {searchingRoad && roadList.length > 0 && 
                     <RoadList 
-                        roadList={roadList} 
+                        roadList={roadList}
+                        getLonger={mbListLonger}
                         link="bus"
                         linkParameter="RouteUID"
                         searchRoad={searchingRoad}
                     />}
-                    {searchingRoad && !loading && roadList.length === 0 && <ResultImg />}
+                    {searchingRoad && !loading && roadList.length === 0 && <ResultImg text={'很抱歉，找不到符合的路線'}/>}
                 </div>
             </div>
             <Keyboard
                 onClick={getBtnValueHandler}
+                getSmaller={getListLonger}
                 sliceEnd={sliceRoadEndHandler}
                 cleanValue={cleanHandler} />
         </section>

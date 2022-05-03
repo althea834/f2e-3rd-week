@@ -5,12 +5,13 @@ import { ReactComponent as BackArrow } from '../../img/icon/backspace.svg';
 import { ReactComponent as CloseBtn } from '../../img/icon/cross.svg';
 import Modal from "../UI/modal/Modal";
 
-const Keyboard = ({ onClick, sliceEnd, cleanValue }) => {
+const Keyboard = ({ onClick, getSmaller=()=>{}, sliceEnd, cleanValue }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [openKeyBoard, setOpenKeyBoard] = useState(true)
 
     const keyBoardHandler = () => {
         setOpenKeyBoard(state => !state)
+        getSmaller()
     }
 
     const openModalHandler = () => {
