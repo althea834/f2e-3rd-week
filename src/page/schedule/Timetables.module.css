@@ -98,14 +98,18 @@
 
 @media screen and (max-width: 720px) {
   .table {
+    align-self: start;
+    justify-self: start;
     height: auto;
     overflow: auto;
   }
   .sheetContainer {
     flex-direction: column;
+    justify-content: start;
     max-height: 732px;
   }
   .sheet {
+    width: auto;
     margin-right: 0;
     margin-bottom: 24px;
   }
