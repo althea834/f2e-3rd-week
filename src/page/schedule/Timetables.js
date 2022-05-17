@@ -59,13 +59,13 @@ const Table = ({ isOpen, road, schedule, closeModalHandler }) => {
             sheetTitle = serviceDay.join('、')
         }
 
-        const timeHeader = sheet.Direction.map(t =>{
-            return <th>{`往 ${t}`}</th>
+        const timeHeader = sheet.Direction.map((t,i) =>{
+            return <th key={i}>{`往 ${t}`}</th>
         })
 
         const Time = sheet.Time.map((t, i) => {
-            const tData = t.map(data =>{
-                return <td><div>{data}</div></td>
+            const tData = t.map((data,idx) =>{
+                return <td key={`${i}-${idx}`}><div>{data}</div></td>
             })
 
             return <tr key={i}>
@@ -73,7 +73,7 @@ const Table = ({ isOpen, road, schedule, closeModalHandler }) => {
             </tr>
         })
 
-        return <table className={style.sheet} key={sheetTitle}>
+        return <table className={style.sheet} key={`${sheetTitle}`}>
             <caption className={style.sheetTitle}>{sheetTitle}</caption>
             <tbody>
                 <tr>

@@ -1,8 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
 
-import { ReactComponent as TwoWayArrow } from '../../img/icon/twoWayArrow.svg'
-import Heart from '../../img/icon/heart.png'
+import RouteListItem from './RouteListItem';
 
 import style from './RoadList.module.css';
 
@@ -32,72 +30,94 @@ const cityTable = {
 }
 
 const NickNameTransCity = {
-    "TPE":"Taipei" ,
-    "NWT":"NewTaipei" ,
-    "TAO":"Taoyuan" ,
-    "TXG":"Taichung" ,
-    "TNN":"Tainan" ,
-    "KHH":"Kaohsiung" ,
-    "KEE":"Keelung" ,
-    "HSZ":"Hsinchu" ,
-    "HSQ":"HsinchuCounty" ,
-    "MIA":"MiaoliCounty" ,
-    "CHA":"ChanghuaCounty" ,
-    "NAN":"NantouCounty" ,
-    "YUN":"YunlinCounty" ,
-    "CYQ":"ChiayiCounty" ,
-    "CYI":"Chiayi" ,
-    "PIF":"PingtungCounty" ,
-    "ILA":"YilanCounty" ,
-    "HUA":"HualienCounty" ,
-    "TTT":"TaitungCounty" ,
-    "KIN":"KinmenCounty" ,
-    "PEN":"PenghuCounty" ,
-    "LIE":"LienchiangCounty"
+    "TPE": "Taipei",
+    "NWT": "NewTaipei",
+    "TAO": "Taoyuan",
+    "TXG": "Taichung",
+    "TNN": "Tainan",
+    "KHH": "Kaohsiung",
+    "KEE": "Keelung",
+    "HSZ": "Hsinchu",
+    "HSQ": "HsinchuCounty",
+    "MIA": "MiaoliCounty",
+    "CHA": "ChanghuaCounty",
+    "NAN": "NantouCounty",
+    "YUN": "YunlinCounty",
+    "CYQ": "ChiayiCounty",
+    "CYI": "Chiayi",
+    "PIF": "PingtungCounty",
+    "ILA": "YilanCounty",
+    "HUA": "HualienCounty",
+    "TTT": "TaitungCounty",
+    "KIN": "KinmenCounty",
+    "PEN": "PenghuCounty",
+    "LIE": "LienchiangCounty"
 }
 
 const RoadList = (props) => {
-    const { roadList, link, getLonger=false, searchRoad="", onClick=()=>{}} = props;
 
+    const {
+        roadList,
+        onLikeClick,
+        link,
+        listType,
+        getLonger
+    } = props;
+    
     const longer = getLonger ? style.longer : '';
 
-    const List = roadList.map((data) => {
-        const cityCode = data.RouteUID.slice(0, 3);
-        const cityName = cityTable[cityCode];
-        const cityFetchValue = NickNameTransCity[cityCode];
-        const linkParams = link === 'bus' ? `/${link}/${cityFetchValue}/${data.RouteUID}`:`/${link}`;
+    let List;
 
-        return <li key={data.RouteUID}>
-            <Link
-                to={{
-                    pathname:linkParams,
-                    state:{
-                        road:data.RouteName.Zh_tw,
-                        start:data.DepartureStopNameZh,
-                        end:data.DestinationStopNameZh,
-                        city:cityFetchValue,
-                        searchRoad:searchRoad
-                    }
-                }}
-            >
-                <button className={`${style.leftSide}`} onClick={() => onClick(cityFetchValue, data.RouteName.Zh_tw, data.RouteUID)}>
-                    <h1>{data.RouteName.Zh_tw}</h1>
-                    <span>
-                        {data.DepartureStopNameZh}
-                        <TwoWayArrow />
-                        {data.DestinationStopNameZh}
-                    </span>
-                </button>
-                <div className={`${style.rightSide}`}>
-                    <button>
-                        <img src={Heart} alt="加入我的收藏" />
-                    </button>
-                    {cityName}
-                </div>
-            </Link>
-        </li>
+    if (listType === 'stop') {
+        List = roadList.map((data) => {
+            const cityCode = data.RouteUID.slice(0, 3);
+            const cityFetchValue = NickNameTransCity[cityCode];
+            const linkParams = `/${link}/${cityFetchValue}/${data.RouteUID}`;
 
-    })
+            return <RouteListItem
+                key={data.RouteUID}
+                UITitle={data.StopName}
+                UIFrom={data.RouteName.Zh_tw}
+                UITo={data.DestinationStopNameZh}
+                UIdefaultLiked={true}
+                UINote={data.UINote} 
+                link={linkParams}
+                onLikeClick={onLikeClick}
+                listType={'stop'}
+                routeName={data.RouteName.Zh_tw}
+                routeUID={data.RouteUID}
+                city={cityFetchValue}
+                start={data.DepartureStopNameZh}
+                end={data.DestinationStopNameZh}
+            ></RouteListItem>
+        })
+    }
+    if (listType === 'route') {
+        List = roadList.map((data) => {
+            const cityCode = data.RouteUID.slice(0, 3);
+            const cityName = cityTable[cityCode];
+            const cityFetchValue = NickNameTransCity[cityCode];
+            const linkParams = `/${link}/${cityFetchValue}/${data.RouteUID}`;
+            const originLiked = data.hasOwnProperty('liked') ? data.liked:false;
+
+            return <RouteListItem
+                key={data.RouteUID}
+                UITitle={data.RouteName.Zh_tw}
+                UIFrom={data.DepartureStopNameZh}
+                UITo={data.DestinationStopNameZh}
+                UIdefaultLiked={originLiked}
+                UINote={cityName} 
+                link={linkParams}
+                onLikeClick={onLikeClick}
+                listType={'route'}
+                routeName={data.RouteName.Zh_tw}
+                routeUID={data.RouteUID}
+                city={cityFetchValue}
+                start={data.DepartureStopNameZh}
+                end={data.DestinationStopNameZh}
+            ></RouteListItem>
+        })
+    }
 
     return (
         <div className={`${style.scrollBar} ${longer}`}>

@@ -52,6 +52,30 @@ const Bus = (props) => {
     const getListLonger = () =>{
         setMbListLonger(state => !state)
     }
+    
+    const onLikeHandler = (RouteUID, routeName, DepartureStopNameZh, DestinationStopNameZh, liked) => {
+        if( localStorage.getItem('routeLiked') === null ){
+            localStorage.setItem('routeLiked', JSON.stringify([]))
+        }
+        const routeLiked = JSON.parse(localStorage.getItem('routeLiked'))
+        
+        if( liked ){
+            const routeInfo = {
+                RouteUID,
+                RouteName:{Zh_tw:routeName},
+                DepartureStopNameZh, 
+                DestinationStopNameZh,
+                liked
+            }
+            routeLiked.push(routeInfo)
+            localStorage.setItem('routeLiked', JSON.stringify(routeLiked))
+        }
+        
+        if( !liked ){
+            const newRouteLiked = routeLiked.filter( obj => obj.RouteUID !== RouteUID )
+            localStorage.setItem('routeLiked', JSON.stringify(newRouteLiked))
+        }
+    }
 
     // 初始位置
     useEffect(() => {
@@ -112,7 +136,7 @@ const Bus = (props) => {
     }, [searchingRoad, city, browserCity, fetchData])
 
     return <section className={style.frameContainer}>
-        <Header className={`mainColor ${style.header}`} pathName={pathName} >
+        <Header className={`mainColor`} pathName={pathName} >
             <section className={`mainColor ${style.bottomRound}`}>
                 <Breadcrumbs />
                 <form className={`${style.container} ${style.searchBar}`}>
@@ -140,8 +164,8 @@ const Bus = (props) => {
                         roadList={roadList}
                         getLonger={mbListLonger}
                         link="bus"
-                        linkParameter="RouteUID"
-                        searchRoad={searchingRoad}
+                        listType="route"
+                        onLikeClick={onLikeHandler}
                     />}
                     {searchingRoad && !loading && roadList.length === 0 && <ResultImg text={'很抱歉，找不到符合的路線'}/>}
                 </div>
